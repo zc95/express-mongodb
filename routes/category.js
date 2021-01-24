@@ -30,7 +30,7 @@ router.get('/category/:id', (req, res, next) => {
 router.post('/category', async (req, res, next) => {
     const { name } = req.body;
     const findCategory = await CategoryModel.find({ name })
-    if (findCategory.length > 0) return res.status(500).json({ error: `重复添加类型：${name}` })
+    if (findCategory.length > 0) return res.status(500).json({ msg: `重复添加类型：${name}` })
     new CategoryModel(req.body).save().then(data => {
         res.json({
             code: 1,

@@ -32,7 +32,7 @@ app.use((err, req, res, next) => {
         error = err.errors[eKeys[eKeys.length - 1]].message
     }
 
-    res.status(500).json({ error })
+    res.status(500).json({ msg: error })
 })
 
 // 监听端口
