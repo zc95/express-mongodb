@@ -1,10 +1,14 @@
 const express = require('express')
 const router = express.Router()
 const CategoryModel = require('../model/category')
+const dayjs = require('dayjs')
 
 // 所有品类
 router.get('/category', (req, res, next) => {
     CategoryModel.find({}).then(data => {
+        data.forEach(item => {
+            item._doc.createTime = dayjs(item.createdAt).format('YYYY-MM-DD HH:mm:ss')
+        })
         res.json({
             code: 1,
             data
