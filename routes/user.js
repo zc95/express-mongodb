@@ -24,9 +24,9 @@ router.get('/user/:id', (req, res, next) => {
 
 // 新增账号
 router.post('/user', async (req, res, next) => {
-    const { name } = req.body;
-    const findUser = await UserModel.find({ name })
-    if (findUser.length > 0) return res.status(500).send({ msg: `重复添加类型：${name}` })
+    const { nickName } = req.body;
+    const findUser = await UserModel.find({ nickName })
+    if (findUser.length > 0) return res.status(500).send({ msg: `重复添加类型：${nickName}` })
     new UserModel(req.body).save().then(data => {
         res.json({
             code: 1,
