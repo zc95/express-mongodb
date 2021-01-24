@@ -1,3 +1,9 @@
+## 使用
+#### 安装依赖
+> npm install
+#### 启动服务
+> nodemon
+
 ## mongose参考文档
 - [npm](https://www.npmjs.com/package/mongoose)
 - [mongoosejs 官网](https://mongoosejs.com/)
