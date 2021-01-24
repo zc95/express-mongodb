@@ -29,11 +29,7 @@ const UserSchema = new mongoose.Schema({
             message: '密码必须是16位字母和数字的组合'
         },
         trim: true
-    },
-    createTime: {
-        type: Date,
-        default: Date.now()
     }
-})
+}, { timestamps: true })
 
 module.exports = mongoose.model('User', UserSchema, 'user')
