@@ -62,7 +62,7 @@ router.post('/user/login', async (req, res, next) => {
         _id: findUserByPhoneAndPwd._id,
         phone: findUserByPhoneAndPwd.phone
     }
-    const token = 'Bearer ' + jwt.sign(payload, 'secret', { expiresIn: 20 })
+    const token = 'Bearer ' + jwt.sign(payload, 'secret', { expiresIn: 60 * 60 * 24 * 15 })
 
     res.json({
         code: 1,
