@@ -40,7 +40,6 @@ app.use(require('./routes'))
 
 // 错误处理中间件
 app.use((err, req, res, next) => {
-    console.log(err.name)
     let code = 500;
     let msg = err.message || '请求失败';
 
