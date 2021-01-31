@@ -1,7 +1,8 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
-const mongodbUrl = 'mongodb://localhost/ninja';
+const expressJwt = require('express-jwt')
+const mongodbUrl = 'mongodb://localhost/ninja'
 
 // 启动 express
 const app = express()
@@ -13,6 +14,21 @@ mongoose.connect(mongodbUrl, { useNewUrlParser: true, useUnifiedTopology: true }
     console.log('连接数据库失败：' + err);
 })
 
+/**
+ * 使用中间件验证token合法性
+ * Headers 中 需要加入 { Authorization: `Bearer ${token}` }
+ */
+app.use(expressJwt({
+    secret: 'secret',
+    algorithms: ['HS256'],
+    credentialsRequired: true
+}).unless({
+    path: [
+        '/api/user/login',
+        '/api/user/register'
+    ] // 权鉴白名单
+}))
+
 // body 解析中间件
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({
@@ -23,16 +39,24 @@ app.use(bodyParser.urlencoded({
 app.use(require('./routes'))
 
 // 错误处理中间件
-app.use((err, req, res, next) => {
-    let error = err.message || '请求失败';
+app.use((err, req, res) => {
+    console.log(err.name)
+    let code = 500;
+    let msg = err.message || '请求失败';
 
-    if (err.errors) {
-        console.log('\n' + JSON.stringify(err.errors))
-        const eKeys = Object.keys(err.errors)
-        error = err.errors[eKeys[eKeys.length - 1]].message
+    // token 过期
+    if (err.name === 'UnauthorizedError') {
+        code = 401;
+        msg = "登录信息已过期，请重新登录"
     }
 
-    res.status(500).json({ msg: error })
+    // schema 验证
+    if (err.errors) {
+        const eKeys = Object.keys(err.errors)
+        msg = err.errors[eKeys[eKeys.length - 1]].message
+    }
+
+    res.status(code).json({ msg })
 })
 
 // 监听端口
